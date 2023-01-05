@@ -1,14 +1,54 @@
-import styles from './taskInput.module.scss'
+import React, { useState } from 'react'
 import AddIcon from '@mui/icons-material/Add'
+import CheckIcon from '@mui/icons-material/Check'
 
-function TaskInput() {
+import styles from './taskInput.module.scss'
+import { Todo } from '../../@types/todo.type'
+
+interface TaskInputProps {
+    currentTodo: Todo | null
+    addTodo: (name: string) => void
+    editTodo: (name: string) => void
+    endEditTodo: () => void
+}
+
+function TaskInput(props: TaskInputProps) {
+    const { addTodo, currentTodo, editTodo, endEditTodo } = props
+
+    const [name, setName] = useState<string>('')
+
+    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault()
+        if (currentTodo) {
+            endEditTodo()
+            if (name) setName('')
+        } else {
+            addTodo(name)
+            setName('')
+        }
+    }
+
+    const onChangeInput = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const { value } = event.target
+        if (currentTodo) {
+            editTodo(value)
+        } else {
+            setName(value)
+        }
+    }
+
     return (
         <div className='mb-2'>
             <h1 className={styles.title}>TODOS</h1>
-            <form className={styles.form}>
-                <input type='text' placeholder='Write your todo...' />
+            <form className={styles.form} onSubmit={handleSubmit}>
+                <input
+                    type='text'
+                    placeholder='Write your todo...'
+                    value={currentTodo ? currentTodo.name : name}
+                    onChange={onChangeInput}
+                />
                 <button type='submit'>
-                    <AddIcon fontSize='large' />
+                    {currentTodo ? <CheckIcon fontSize='large' /> : <AddIcon fontSize='large' />}
                 </button>
             </form>
         </div>
