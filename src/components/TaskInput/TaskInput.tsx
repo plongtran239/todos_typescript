@@ -1,9 +1,12 @@
 import React, { useState } from 'react'
 import AddIcon from '@mui/icons-material/Add'
 import CheckIcon from '@mui/icons-material/Check'
+import PropTypes from 'prop-types'
+
+import { Todo } from '../../@types/todo.type'
+import { TodoTypes } from '../../PropTypes/todo.proptypes'
 
 import styles from './taskInput.module.scss'
-import { Todo } from '../../@types/todo.type'
 
 interface TaskInputProps {
     currentTodo: Todo | null
@@ -53,6 +56,13 @@ function TaskInput(props: TaskInputProps) {
             </form>
         </div>
     )
+}
+
+TaskInput.propTypes = {
+    currentTodo: PropTypes.oneOfType([TodoTypes, PropTypes.oneOf([null])]),
+    addTodo: PropTypes.func.isRequired,
+    editTodo: PropTypes.func.isRequired,
+    endEditTodo: PropTypes.func.isRequired
 }
 
 export default TaskInput
